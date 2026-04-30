@@ -2,7 +2,8 @@
 
 @{
     ViewData["Title"] = "Dashboard";
-    // Do NOT set Layout here - let _ViewStart handle it
+    // Tell Layout to use the glassmorphism card container
+    ViewData["MainClass"] = "main-content";
 }
 
 <div class="welcome-section">
@@ -52,49 +53,53 @@
     <!-- Recent Income -->
     <div>
         <h3><i class="fas fa-coffee"></i> Recent Income</h3>
-        <table>
-            <thead>
-                <tr><th>Source</th><th>Amount</th><th>Date</th></tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.RecentIncomes.Take(5))
-                {
-                    <tr>
-                        <td>@item.Source</td>
-                        <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
-                        <td>@item.Date.ToString("MMM dd")</td>
-                    </tr>
-                }
-                @if (!Model.RecentIncomes.Any())
-                {
-                    <tr><td colspan="3">No income records yet</td></tr>
-                }
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>Source</th><th>Amount</th><th>Date</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RecentIncomes.Take(5))
+                    {
+                        <tr>
+                            <td>@item.Source</td>
+                            <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
+                            <td>@item.Date.ToString("MMM dd")</td>
+                        </tr>
+                    }
+                    @if (!Model.RecentIncomes.Any())
+                    {
+                        <tr><td colspan="3">No income records yet</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Recent Expenses -->
     <div>
         <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
-        <table>
-            <thead>
-                <tr><th>Category</th><th>Amount</th><th>Date</th></tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.RecentExpenses.Take(5))
-                {
-                    <tr>
-                        <td>@item.Category</td>
-                        <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
-                        <td>@item.Date.ToString("MMM dd")</td>
-                    </tr>
-                }
-                @if (!Model.RecentExpenses.Any())
-                {
-                    <tr><td colspan="3">No expense records yet</td></tr>
-                }
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>Category</th><th>Amount</th><th>Date</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RecentExpenses.Take(5))
+                    {
+                        <tr>
+                            <td>@item.Category</td>
+                            <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
+                            <td>@item.Date.ToString("MMM dd")</td>
+                        </tr>
+                    }
+                    @if (!Model.RecentExpenses.Any())
+                    {
+                        <tr><td colspan="3">No expense records yet</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -107,7 +112,7 @@
         <i class="fas fa-shopping-cart"></i> Add Expense
     </a>
     <a href="/Report/Index" class="btn-secondary">
-        <i class="fas fa-chart-bar" ></i> Generate Report
+        <i class="fas fa-chart-bar"></i> Generate Report
     </a>
 </div>
 

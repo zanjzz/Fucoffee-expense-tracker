@@ -5,7 +5,7 @@
 
 <div class="form-page-container">
     <div class="floating-form-card">
-        <h2>✏️ Edit Expense</h2>
+        <h2>Edit Expense</h2>
 
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="All" class="validation-summary-errors"></div>
@@ -16,13 +16,11 @@
             <div class="form-group">
                 <label asp-for="Category">Category</label>
                 <input asp-for="Category" />
-                <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             
             <div class="form-group">
                 <label asp-for="Amount">Amount</label>
-                <input asp-for="Amount" type="number" step="0.01" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
+                @Html.TextBoxFor(m => m.Amount, "{0:F2}", new { type = "number", step = "0.01" })
             </div>
             
             <div class="form-group">
@@ -46,3 +44,11 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.validation-summary-errors').forEach(summary => {
+            if (summary.innerText.trim() === '') summary.style.display = 'none';
+        });
+    </script>
+}

@@ -46,20 +46,35 @@
 
     @if (Context.Session.GetString("Username") != null)
     {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
         <nav class="navbar">
             <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index">
-                <i class="fas fa-mug-hot"></i> FUCOFFEE
+                <img src="~/fucoffee.png" alt="FUCOFFEE Logo" style="height: 32px; width: auto; margin-right: 8px;" />
+                FUCOFFEE
             </a>
             <div class="nav-links">
-                <a asp-controller="Dashboard" asp-action="Index"><i class="fas fa-chart-line"></i> Dashboard</a>
-                <a asp-controller="Income" asp-action="Index"><i class="fas fa-arrow-up"></i> Income</a>
-                <a asp-controller="Expense" asp-action="Index"><i class="fas fa-shopping-cart"></i> Expenses</a>
-                <a asp-controller="Report" asp-action="Index"><i class="fas fa-file-alt"></i> Reports</a>
+                <a asp-controller="Dashboard" asp-action="Index" class="@(currentController == "Dashboard" ? "active" : "")">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a asp-controller="Income" asp-action="Index" class="@(currentController == "Income" ? "active" : "")">
+                    <i class="fas fa-arrow-up"></i> Income
+                </a>
+                <a asp-controller="Expense" asp-action="Index" class="@(currentController == "Expense" ? "active" : "")">
+                    <i class="fas fa-shopping-cart"></i> Expenses
+                </a>
+                <a asp-controller="Report" asp-action="Index" class="@(currentController == "Report" ? "active" : "")">
+                    <i class="fas fa-file-alt"></i> Reports
+                </a>
                 @if (Context.Session.GetString("Role") == "Admin")
                 {
-                    <a asp-controller="User" asp-action="Index"><i class="fas fa-users"></i> Users</a>
+                    <a asp-controller="User" asp-action="Index" class="@(currentController == "User" ? "active" : "")">
+                        <i class="fas fa-users"></i> Users
+                    </a>
                 }
-                <a asp-controller="Auth" asp-action="Logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a asp-controller="Auth" asp-action="Logout" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
         </nav>
     }
@@ -73,6 +88,26 @@
 
     <script src="~/js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+            (function() {
+                function hideEmptyValidation() {
+                    document.querySelectorAll('.validation-summary-errors').forEach(summary => {
+                        if (summary.innerText.trim() === '') {
+                            summary.style.display = 'none';
+                        } else {
+                            summary.style.display = 'block';
+                        }
+                    });
+                }
+                hideEmptyValidation();
+                // optionally observe DOM changes if needed
+                if (typeof MutationObserver !== 'undefined') {
+                    const observer = new MutationObserver(hideEmptyValidation);
+                    observer.observe(document.body, { childList: true, subtree: true });
+                }
+            })();
+    </script>
 
     <!-- Vanta Fog Effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>

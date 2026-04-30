@@ -171,4 +171,4 @@ C:\Users\zdllz\source\repos\fuCoffeeSystem\obj\Debug\net10.0\FuCoffee.genruntime
 C:\Users\zdllz\source\repos\fuCoffeeSystem\obj\Debug\net10.0\ref\FuCoffee.dll
 C:\Users\zdllz\source\repos\fuCoffeeSystem\bin\Debug\net10.0\BCrypt.Net-Next.dll
 C:\Users\zdllz\source\repos\fuCoffeeSystem\obj\Debug\net10.0\FuCoffee.sourcelink.json
-C:\Users\zdllz\source\repos\fuCoffeeSystem\obj\Debug\net10.0\compressed\5bvq3fbwnh-{0}-inej0xf8gy-inej0xf8gy.gz
+C:\Users\zdllz\source\repos\fuCoffeeSystem\obj\Debug\net10.0\compressed\5bvq3fbwnh-{0}-rdoe5x8fud-rdoe5x8fud.gz

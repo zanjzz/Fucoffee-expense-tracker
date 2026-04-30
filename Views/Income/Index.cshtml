@@ -1,40 +1,55 @@
 ﻿@model IEnumerable<Fucoffee.Models.Income>
 
-<h2>Income Records</h2>
+@{
+    ViewData["Title"] = "Income Records";
+}
 
-<div class="quick-actions" style="margin-bottom: 1.5rem;">
-    <a asp-action="Create" class="btn-add">
-        <i class="fas fa-plus"></i> Add Income
-    </a>
+<div class="page-wrapper">
+    <div class="main-content">
+        <div class="header-actions">
+            <h2>Income Records</h2>
+            <a asp-action="Create" class="btn-add">
+                <i class="fas fa-plus"></i> Add Income
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Source</td>
+                            <td>@item.Amount.ToString("C")</td>
+                            <td class="description-cell">@item.Description</td>
+                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                            <td class="table-actions">
+                                <a asp-action="Edit" asp-route-id="@item.IncomeId" class="btn-edit btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.IncomeId" class="btn-delete btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="quick-actions">
+            <a asp-controller="Dashboard" asp-action="Index" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
 </div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Source</th>
-            <th>Amount</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Source</td>
-                <td>@item.Amount.ToString("C")</td>
-                <td>@item.Description</td>
-                <td>@item.Date.ToString("MMM dd, yyyy")</td>
-                <td class="table-actions">
-                    <a asp-action="Edit" asp-route-id="@item.IncomeId" class="btn-edit btn-sm">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@item.IncomeId" class="btn-delete btn-sm">
-                        <i class="fas fa-trash-alt"></i> Delete
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>

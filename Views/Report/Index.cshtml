@@ -4,116 +4,121 @@
     ViewData["Title"] = "Reports";
 }
 
-<h2><i class="fas fa-chart-bar"></i> Reports</h2>
+<div class="main-content">
+    <h2><i class="fas fa-chart-bar"></i> Reports</h2>
 
-<form method="get" asp-action="Index">
-    <div class="filter-group">
-        <div class="filter-field">
-            <label><i class="fas fa-calendar-alt"></i> Start Date</label>
-            <input type="date" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+    <form method="get" asp-action="Index">
+        <div class="filter-group">
+            <div class="filter-field">
+                <label><i class="fas fa-calendar-alt"></i> Start Date</label>
+                <input type="date" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="filter-field">
+                <label><i class="fas fa-calendar-check"></i> End Date</label>
+                <input type="date" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <a asp-action="Index" class="btn-secondary">
+                    <i class="fas fa-undo-alt"></i> Clear
+                </a>
+            </div>
         </div>
-        <div class="filter-field">
-            <label><i class="fas fa-calendar-check"></i> End Date</label>
-            <input type="date" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+    </form>
+
+    <!-- Summary Cards -->
+    <div class="stat-cards">
+        <div class="stat-card">
+            <p><i class="fas fa-arrow-up"></i> Total Income</p>
+            <h3 class="positive">@Model.TotalIncome.ToString("C")</h3>
         </div>
-        <div class="filter-actions">
-            <button type="submit" class="btn-primary">
-                <i class="fas fa-filter"></i> Filter
-            </button>
-            <a asp-action="Index" class="btn-secondary">
-                <i class="fas fa-undo-alt"></i> Clear
-            </a>
+        <div class="stat-card">
+            <p><i class="fas fa-arrow-down"></i> Total Expenses</p>
+            <h3 class="negative">@Model.TotalExpenses.ToString("C")</h3>
+        </div>
+        <div class="stat-card">
+            <p><i class="fas fa-chart-line"></i> Net Profit</p>
+            <h3 class="@(Model.NetProfit >= 0 ? "positive" : "negative")">
+                @Model.NetProfit.ToString("C")
+            </h3>
         </div>
     </div>
-</form>
 
-<!-- Summary Cards -->
-<div class="stat-cards">
-    <div class="stat-card">
-        <p><i class="fas fa-arrow-up"></i> Total Income</p>
-        <h3 class="positive">@Model.TotalIncome.ToString("C")</h3>
+    <!-- Income Table -->
+    <div style="margin-bottom: 2rem;">
+        <h3><i class="fas fa-coffee"></i> Income Records</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Incomes)
+                    {
+                        <tr>
+                            <td>@item.Source</td>
+                            <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
+                            <td class="description-cell">@item.Description</td>
+                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                        </tr>
+                    }
+                    @if (!Model.Incomes.Any())
+                    {
+                        <tr><td colspan="4" style="text-align: center;">No income records found</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="stat-card">
-        <p><i class="fas fa-arrow-down"></i> Total Expenses</p>
-        <h3 class="negative">@Model.TotalExpenses.ToString("C")</h3>
+
+    <!-- Expenses Table -->
+    <div style="margin-bottom: 2rem;">
+        <h3><i class="fas fa-receipt"></i> Expense Records</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Expenses)
+                    {
+                        <tr>
+                            <td>@item.Category</td>
+                            <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
+                            <td class="description-cell">@item.Description</td>
+                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                        </tr>
+                    }
+                    @if (!Model.Expenses.Any())
+                    {
+                        <tr><td colspan="4" style="text-align: center;">No expense records found</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="stat-card">
-        <p><i class="fas fa-chart-line"></i> Net Profit</p>
-        <h3 class="@(Model.NetProfit >= 0 ? "positive" : "negative")">
-            @Model.NetProfit.ToString("C")
-        </h3>
-    </div>
-</div>
 
-<!-- Income Section -->
-<div style="margin-bottom: 2rem;">
-    <h3><i class="fas fa-coffee"></i> Income Records</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Source</th>
-                <th>Amount</th>
-                <th>Description</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Incomes)
-            {
-                <tr>
-                    <td>@item.Source</td>
-                    <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
-                    <td>@item.Description</td>
-                    <td>@item.Date.ToString("MMM dd, yyyy")</td>
-                </tr>
-            }
-            @if (!Model.Incomes.Any())
-            {
-                <tr><td colspan="4" style="text-align: center;">No income records found</td></tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<!-- Expenses Section -->
-<div style="margin-bottom: 2rem;">
-    <h3><i class="fas fa-receipt"></i> Expense Records</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Description</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Expenses)
-            {
-                <tr>
-                    <td>@item.Category</td>
-                    <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
-                    <td>@item.Description</td>
-                    <td>@item.Date.ToString("MMM dd, yyyy")</td>
-                </tr>
-            }
-            @if (!Model.Expenses.Any())
-            {
-                <tr><td colspan="4" style="text-align: center;">No expense records found</td></tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<!-- Back Button -->
-<div class="footer-links">
-    <a asp-controller="Dashboard" asp-action="Index" class="back-link">
-        <i class="fas fa-arrow-left"></i> Back to Dashboard
-    </a>
-    @if (Model.Incomes.Any() || Model.Expenses.Any())
-    {
-        <a href="#" onclick="window.print();" class="back-link">
-            <i class="fas fa-print"></i> Print Report
+    <div class="footer-links">
+        <a asp-controller="Dashboard" asp-action="Index" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
-    }
+        @if (Model.Incomes.Any() || Model.Expenses.Any())
+        {
+            <a href="#" onclick="window.print();" class="back-link">
+                <i class="fas fa-print"></i> Print Report
+            </a>
+        }
+    </div>
 </div>
