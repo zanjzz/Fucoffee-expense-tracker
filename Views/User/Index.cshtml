@@ -4,29 +4,54 @@
     ViewData["Title"] = "Manage Users";
 }
 
-<h2>Manage Users</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Created</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Username</td>
-                <td>@user.Role</td>
-                <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<a asp-controller="Dashboard" asp-action="Index">Back to Dashboard</a>
+<div class="page-wrapper">
+    <div class="main-content">
+        <div class="header-actions">
+            <h2>👥 Manage Users</h2>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Username</td>
+                        <td>
+                            @if (user.Role == "Admin")
+                            {
+                                <span style="color: var(--caramel-light);">@user.Role</span>
+                            }
+                            else
+                            {
+                                <span>@user.Role</span>
+                            }
+                        </td>
+                        <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                        <td class="table-actions">
+                            <a asp-action="Edit" asp-route-id="@user.UserId" class="btn-edit">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@user.UserId" class="btn-delete">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="quick-actions">
+            <a asp-controller="Dashboard" asp-action="Index" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>

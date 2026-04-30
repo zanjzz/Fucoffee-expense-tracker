@@ -1,14 +1,29 @@
-﻿@model Fucoffee.Models.User
+﻿@{
+    ViewData["MainClass"] = "form-only-layout";
+}
+@model Fucoffee.Models.User
 
 @{
     ViewData["Title"] = "Delete User";
 }
 
-<h2>Delete User</h2>
-<p>Are you sure you want to delete <strong>@Model.Username</strong>?</p>
+<div class="form-page-container">
+    <div class="floating-form-card delete-card">
+        <div class="warning-icon">⚠️</div>
+        <h2>Delete User</h2>
+        <p>Are you sure you want to delete user <strong>@Model.Username</strong>?</p>
+        <p style="color: var(--danger); font-size: 0.85rem;">This action cannot be undone.</p>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="UserId" />
-    <button type="submit">Yes, delete</button>
-    <a asp-action="Index">Cancel</a>
-</form>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="UserId" />
+            <div class="form-actions">
+                <button type="submit" class="btn-delete">
+                    <i class="fas fa-trash-alt"></i> Yes, Delete User
+                </button>
+                <a asp-action="Index" class="btn-secondary">
+                    <i class="fas fa-ban"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,22 +1,30 @@
-﻿@model Fucoffee.Models.Income
+﻿@{
+    ViewData["MainClass"] = "form-only-layout";
+}
+@model Fucoffee.Models.Income
 
-<h2>Delete Income</h2>
-<p>Are you sure you want to delete this record?</p>
+<div class="form-page-container">
+    <div class="floating-form-card delete-card">
+        <div class="warning-icon">⚠️</div>
+        <h2>Delete Income</h2>
+        <p>Are you sure you want to delete this income record?</p>
 
-<div class="stat-card" style="margin-bottom: 1.5rem;">
-    <p><strong>Source:</strong> @Model.Source</p>
-    <p><strong>Amount:</strong> @Model.Amount.ToString("C")</p>
-    <p><strong>Date:</strong> @Model.Date.ToString("MMM dd, yyyy")</p>
-</div>
+        <div class="delete-preview">
+            <p><strong>Source:</strong> @Model.Source</p>
+            <p><strong>Amount:</strong> <span style="color: var(--danger);">@Model.Amount.ToString("C")</span></p>
+            <p><strong>Date:</strong> @Model.Date.ToString("MMM dd, yyyy")</p>
+        </div>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="IncomeId" />
-    <div class="btn-group">
-        <button type="submit" class="btn-delete">
-            <i class="fas fa-trash-alt"></i> Yes, delete
-        </button>
-        <a asp-action="Index" class="btn-secondary">
-            <i class="fas fa-ban"></i> Cancel
-        </a>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="IncomeId" />
+            <div class="form-actions">
+                <button type="submit" class="btn-delete">
+                    <i class="fas fa-trash-alt"></i> Yes, Delete
+                </button>
+                <a asp-action="Index" class="btn-secondary">
+                    <i class="fas fa-ban"></i> Cancel
+                </a>
+            </div>
+        </form>
     </div>
-</form>
+</div>

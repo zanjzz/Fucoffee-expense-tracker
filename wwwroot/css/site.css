@@ -348,7 +348,7 @@ tr:hover td {
     border-top: 1px solid var(--border-glass);
 }
 
-/* ── Buttons (Enhanced) ── */
+/* ── Buttons (Base) ── */
 button, .btn, .btn-primary, .btn-add, .btn-edit, .btn-delete {
     padding: 0.6rem 1.3rem;
     border-radius: 12px;
@@ -426,7 +426,7 @@ button, .btn, .btn-primary, .btn-add, .btn-edit, .btn-delete {
         gap: 12px;
     }
 
-/* ── Forms ── */
+/* ── Base Forms (Dashboard only) ── */
 form div {
     margin-bottom: 1rem;
 }
@@ -486,7 +486,7 @@ select {
         margin-bottom: 1.5rem;
     }
 
-/* ── MODALS (Fixed: centered, max-width, not full screen) ── */
+/* ── MODALS ── */
 .modal {
     display: flex;
     align-items: center;
@@ -560,7 +560,6 @@ select {
     gap: 0.75rem;
 }
 
-/* Responsive modals */
 @media (max-width: 576px) {
     .modal-dialog {
         width: 95%;
@@ -643,10 +642,9 @@ select {
     }
 
 /* ──────────────────────────────────────────────────────────
-   ENHANCED BUTTONS - Coffee Theme Actions
+   ENHANCED BUTTONS - Ripple Effects & Icons
 ────────────────────────────────────────────────────────── */
 
-/* Base Button Styles */
 button,
 .btn,
 a.btn,
@@ -669,7 +667,6 @@ input[type="button"] {
     letter-spacing: 0.3px;
 }
 
-    /* Button Ripple Effect */
     button::before,
     .btn::before {
         content: '';
@@ -690,7 +687,7 @@ input[type="button"] {
         height: 300px;
     }
 
-    /* PRIMARY BUTTON (Save/Submit) */
+    /* PRIMARY BUTTON */
     .btn-primary,
     button[type="submit"],
     .btn-save {
@@ -727,16 +724,10 @@ a.btn-add {
         color: white;
     }
 
-    .btn-add i,
-    .btn-create i {
-        font-size: 0.9rem;
-        transition: transform 0.2s;
-    }
-
-    .btn-add:hover i,
-    .btn-create:hover i {
-        transform: rotate(90deg);
-    }
+        .btn-add:hover i,
+        .btn-create:hover i {
+            transform: rotate(90deg);
+        }
 
 /* EDIT BUTTON */
 .btn-edit,
@@ -799,20 +790,48 @@ a.btn-delete {
 
 /* SECONDARY / CANCEL BUTTON */
 .btn-secondary,
-.btn-cancel {
-    background: rgba(15, 15, 15, 0.7);
+.btn-cancel,
+a.btn-secondary,
+a.btn-cancel {
+    background: rgba(25, 25, 25, 0.8);
     backdrop-filter: blur(8px);
     color: var(--text-secondary);
     border: 1px solid var(--border-glass);
+    padding: 0.7rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
     box-shadow: none;
 }
 
     .btn-secondary:hover,
-    .btn-cancel:hover {
-        background: rgba(25, 25, 25, 0.85);
+    .btn-cancel:hover,
+    a.btn-secondary:hover,
+    a.btn-cancel:hover {
+        background: rgba(40, 40, 40, 0.9);
         color: var(--text-primary);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
         border-color: var(--border-glass-hover);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+/* Danger secondary for delete cancel */
+.btn-secondary-danger {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #F87171;
+}
+
+    .btn-secondary-danger:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: var(--danger);
+        color: var(--danger);
     }
 
 /* OUTLINE BUTTON */
@@ -831,7 +850,7 @@ a.btn-delete {
         box-shadow: 0 2px 12px rgba(198, 139, 94, 0.2);
     }
 
-/* INFO / VIEW BUTTON */
+/* INFO BUTTON */
 .btn-info,
 .btn-view {
     background: linear-gradient(135deg, #3B82F6, #2563EB);
@@ -846,39 +865,12 @@ a.btn-delete {
         box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
     }
 
-/* SUCCESS BUTTON */
-.btn-success {
-    background: linear-gradient(135deg, #10B981, #059669);
-    color: white;
-}
-
-    .btn-success:hover {
-        transform: translateY(-2px);
-        background: linear-gradient(135deg, #34D399, #10B981);
-        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-    }
-
 /* SMALL BUTTONS */
 .btn-sm {
     padding: 0.4rem 0.9rem;
     font-size: 0.75rem;
     gap: 6px;
 }
-
-    .btn-sm i {
-        font-size: 0.7rem;
-    }
-
-/* ICON ONLY BUTTONS */
-.btn-icon {
-    padding: 0.5rem;
-    border-radius: 10px;
-    aspect-ratio: 1;
-}
-
-    .btn-icon i {
-        margin: 0;
-    }
 
 /* BUTTON GROUPS */
 .btn-group {
@@ -904,46 +896,11 @@ a.btn-delete {
 
 /* DISABLED STATE */
 button:disabled,
-.btn:disabled,
-button[disabled],
-.btn[disabled] {
+.btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
     filter: grayscale(0.1);
-}
-
-    button:disabled:hover,
-    .btn:disabled:hover {
-        transform: none !important;
-        box-shadow: none !important;
-    }
-
-/* LOADING STATE */
-.btn-loading {
-    position: relative;
-    color: transparent !important;
-}
-
-    .btn-loading::after {
-        content: '';
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        top: 50%;
-        left: 50%;
-        margin-left: -8px;
-        margin-top: -8px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-top-color: white;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-    }
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 /* FLOATING ACTION BUTTON */
@@ -1027,12 +984,6 @@ button[disabled],
     flex-wrap: wrap;
 }
 
-    .filter-actions button,
-    .filter-actions a {
-        white-space: nowrap;
-    }
-
-/* Responsive filter */
 @media (max-width: 640px) {
     .filter-group {
         flex-direction: column;
@@ -1054,7 +1005,130 @@ button[disabled],
         }
 }
 
-/* Print styles */
+/* ──────────────────────────────────────────────────────────
+   FLOATING FORM CARDS - FOR CREATE/EDIT/DELETE PAGES
+   (No double box - floats directly on background)
+────────────────────────────────────────────────────────── */
+
+.form-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 72px);
+    padding: 2rem;
+}
+
+.floating-form-card {
+    background: rgba(15, 15, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 28px;
+    border: 1px solid var(--border-glass);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    max-width: 550px;
+    width: 100%;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+    .floating-form-card:hover {
+        border-color: var(--border-glass-hover);
+        box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    .floating-form-card.delete-card {
+        max-width: 480px;
+        text-align: center;
+    }
+
+        .floating-form-card.delete-card .warning-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+    .floating-form-card .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .floating-form-card label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .floating-form-card input,
+    .floating-form-card select,
+    .floating-form-card textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(10, 10, 10, 0.6);
+        border: 1px solid var(--border-glass);
+        border-radius: 14px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+        .floating-form-card input:focus,
+        .floating-form-card select:focus {
+            outline: none;
+            border-color: var(--caramel);
+            box-shadow: 0 0 0 3px rgba(198, 139, 94, 0.15);
+            background: rgba(20, 20, 20, 0.8);
+        }
+
+    .floating-form-card .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.8rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-glass);
+    }
+
+        .floating-form-card .form-actions button,
+        .floating-form-card .form-actions a {
+            flex: 1;
+            justify-content: center;
+        }
+
+/* Delete preview box */
+.delete-preview {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+    .delete-preview p {
+        margin: 0.5rem 0;
+    }
+
+/* Responsive floating cards */
+@media (max-width: 600px) {
+    .form-page-container {
+        padding: 1rem;
+    }
+
+    .floating-form-card {
+        padding: 1.5rem;
+    }
+
+        .floating-form-card .form-actions {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+            .floating-form-card .form-actions button,
+            .floating-form-card .form-actions a {
+                width: 100%;
+            }
+}
+
+/* ── Print Styles ── */
 @media print {
     .navbar,
     .filter-group,
@@ -1088,23 +1162,17 @@ button[disabled],
     }
 }
 
-/* ──────────────────────────────────────────────────────────
-   ENHANCED LINK STYLES
-────────────────────────────────────────────────────────── */
-
-/* Base link styles */
+/* ── Link Styles ── */
 a {
     color: var(--caramel-light);
     text-decoration: none;
     transition: var(--transition);
-    position: relative;
 }
 
     a:hover {
         color: var(--text-primary);
     }
 
-/* Navigation links */
 .nav-links a {
     color: var(--text-secondary);
     text-decoration: none;
@@ -1124,23 +1192,8 @@ a {
         transform: translateY(-1px);
     }
 
-/* Table action links */
-td a:not(.btn-edit):not(.btn-delete):not(.btn-add):not(.btn-primary):not(.btn-secondary) {
-    color: var(--caramel-light);
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    transition: var(--transition);
-}
-
-    td a:not(.btn-edit):not(.btn-delete):not(.btn-add):not(.btn-primary):not(.btn-secondary):hover {
-        background: rgba(198, 139, 94, 0.1);
-        color: var(--text-primary);
-    }
-
-/* Back to Dashboard / Report links */
 .report-link,
-.back-link,
-a[asp-controller="Dashboard"] {
+.back-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -1152,61 +1205,12 @@ a[asp-controller="Dashboard"] {
 }
 
     .report-link:hover,
-    .back-link:hover,
-    a[asp-controller="Dashboard"]:hover {
+    .back-link:hover {
         color: var(--text-primary);
         background: rgba(255, 255, 255, 0.03);
         gap: 12px;
     }
 
-/* Clear filter link */
-a.clear-link,
-a[asp-action="Index"]:not(.btn-secondary):not(.btn-primary) {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(10, 10, 10, 0.6);
-    backdrop-filter: blur(4px);
-    padding: 0.65rem 1.3rem;
-    border-radius: 12px;
-    border: 1px solid var(--border-glass);
-    color: var(--text-secondary);
-    font-weight: 500;
-    transition: var(--transition);
-}
-
-    a.clear-link:hover,
-    a[asp-action="Index"]:not(.btn-secondary):not(.btn-primary):hover {
-        background: rgba(20, 20, 20, 0.8);
-        color: var(--text-primary);
-        border-color: var(--border-glass-hover);
-        transform: translateY(-1px);
-    }
-
-/* Breadcrumb links */
-.breadcrumb {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-glass);
-}
-
-    .breadcrumb a {
-        color: var(--caramel-light);
-        font-size: 0.85rem;
-    }
-
-        .breadcrumb a:hover {
-            color: var(--text-primary);
-        }
-
-    .breadcrumb span {
-        color: var(--text-secondary);
-    }
-
-/* Footer links */
 .footer-links {
     margin-top: 2rem;
     padding-top: 1rem;
@@ -1227,3 +1231,83 @@ a[asp-action="Index"]:not(.btn-secondary):not(.btn-primary) {
         .footer-links a:hover {
             color: var(--text-primary);
         }
+
+/* ──────────────────────────────────────────────────────────
+   USER PAGE - TABLE ACTION BUTTONS STYLING
+────────────────────────────────────────────────────────── */
+
+/* Style for Edit and Delete buttons inside User table */
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+    /* Edit button in table */
+    .table-actions .btn-edit,
+    a.btn-edit {
+        background: linear-gradient(135deg, #F59E0B, #D97706);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+        .table-actions .btn-edit:hover,
+        a.btn-edit:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #FBBF24, #F59E0B);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            color: white;
+        }
+
+    /* Delete button in table */
+    .table-actions .btn-delete,
+    a.btn-delete {
+        background: linear-gradient(135deg, #EF4444, #DC2626);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+        .table-actions .btn-delete:hover,
+        a.btn-delete:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #F87171, #EF4444);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+
+/* Header actions */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Quick actions at bottom */
+.quick-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-glass);
+}
