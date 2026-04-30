@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Fucoffee.Models.Income>
+
+<h2>Income Records</h2>
+
+<div class="quick-actions" style="margin-bottom: 1.5rem;">
+    <a asp-action="Create" class="btn-add">
+        <i class="fas fa-plus"></i> Add Income
+    </a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Source</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Source</td>
+                <td>@item.Amount.ToString("C")</td>
+                <td>@item.Description</td>
+                <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                <td class="table-actions">
+                    <a asp-action="Edit" asp-route-id="@item.IncomeId" class="btn-edit btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.IncomeId" class="btn-delete btn-sm">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

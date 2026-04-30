@@ -1,0 +1,14 @@
+﻿@model Fucoffee.Models.User
+
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<h2>Delete User</h2>
+<p>Are you sure you want to delete <strong>@Model.Username</strong>?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit">Yes, delete</button>
+    <a asp-action="Index">Cancel</a>
+</form>

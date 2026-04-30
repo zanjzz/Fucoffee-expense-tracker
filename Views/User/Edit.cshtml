@@ -1,0 +1,25 @@
+﻿@model Fucoffee.Models.User
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<h2>Edit User</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="UserId" />
+
+    <div>
+        <label asp-for="Username"></label>
+        <input asp-for="Username" />
+    </div>
+    <div>
+        <label asp-for="Role"></label>
+        <select asp-for="Role">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+        </select>
+    </div>
+
+    <button type="submit">Save</button>
+    <a asp-action="Index">Cancel</a>
+</form>

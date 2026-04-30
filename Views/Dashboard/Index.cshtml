@@ -1,0 +1,207 @@
+﻿@model Fucoffee.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    // Do NOT set Layout here - let _ViewStart handle it
+}
+
+<div class="welcome-section">
+    <p>👋 Welcome back, <strong>@Context.Session.GetString("Username")</strong></p>
+    <small style="color: var(--text-secondary);">Here's what's happening with your coffee business today.</small>
+</div>
+
+<!-- Summary Cards -->
+<div class="stat-cards">
+    <div class="stat-card">
+        <p><i class="fas fa-arrow-up"></i> Total Income</p>
+        <h3 class="positive">@Model.TotalIncome.ToString("C")</h3>
+        <small>+12.5% from last month</small>
+    </div>
+    <div class="stat-card">
+        <p><i class="fas fa-arrow-down"></i> Total Expenses</p>
+        <h3 class="negative">@Model.TotalExpenses.ToString("C")</h3>
+        <small>-3.2% from last month</small>
+    </div>
+    <div class="stat-card">
+        <p><i class="fas fa-chart-line"></i> Net Profit</p>
+        <h3 class="@(Model.NetProfit >= 0 ? "positive" : "negative")">
+            @Model.NetProfit.ToString("C")
+        </h3>
+        <small>Profit Margin: @(Model.TotalIncome > 0 ? ((Model.NetProfit / Model.TotalIncome) * 100).ToString("F1") : "0")%</small>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="charts-grid">
+    <div class="chart-card">
+        <h4><i class="fas fa-chart-line"></i> Income vs Expenses Trend</h4>
+        <div class="chart-container">
+            <canvas id="trendChart"></canvas>
+        </div>
+    </div>
+    <div class="chart-card">
+        <h4><i class="fas fa-chart-pie"></i> Expense Distribution</h4>
+        <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Tables Row -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+    <!-- Recent Income -->
+    <div>
+        <h3><i class="fas fa-coffee"></i> Recent Income</h3>
+        <table>
+            <thead>
+                <tr><th>Source</th><th>Amount</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.RecentIncomes.Take(5))
+                {
+                    <tr>
+                        <td>@item.Source</td>
+                        <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
+                        <td>@item.Date.ToString("MMM dd")</td>
+                    </tr>
+                }
+                @if (!Model.RecentIncomes.Any())
+                {
+                    <tr><td colspan="3">No income records yet</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Recent Expenses -->
+    <div>
+        <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
+        <table>
+            <thead>
+                <tr><th>Category</th><th>Amount</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.RecentExpenses.Take(5))
+                {
+                    <tr>
+                        <td>@item.Category</td>
+                        <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
+                        <td>@item.Date.ToString("MMM dd")</td>
+                    </tr>
+                }
+                @if (!Model.RecentExpenses.Any())
+                {
+                    <tr><td colspan="3">No expense records yet</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Quick Actions & Report Link -->
+<div class="quick-actions">
+    <a href="/Income/Create" class="btn-add">
+        <i class="fas fa-plus"></i> Add Income
+    </a>
+    <a href="/Expense/Create" class="btn-add">
+        <i class="fas fa-shopping-cart"></i> Add Expense
+    </a>
+    <a href="/Report/Index" class="btn-outline">
+        <i class="fas fa-chart-bar"></i> Generate Report
+    </a>
+</div>
+
+<a asp-controller="Report" asp-action="Index" class="report-link">
+    View Full Report <i class="fas fa-arrow-right"></i>
+</a>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Get data from your model
+        const months = @Html.Raw(Json.Serialize(Model.Last6Months));
+        const incomeData = @Html.Raw(Json.Serialize(Model.MonthlyIncome));
+        const expenseData = @Html.Raw(Json.Serialize(Model.MonthlyExpenses));
+        
+        // Get category data (check if there are any expenses)
+        const categories = @Html.Raw(Json.Serialize(Model.ExpensesByCategory.Keys));
+        const categoryAmounts = @Html.Raw(Json.Serialize(Model.ExpensesByCategory.Values));
+        
+        // Line Chart
+        const ctx1 = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctx1, {
+        type: 'line',
+        data: {
+        labels: months,
+        datasets: [
+        {
+        label: 'Income',
+        data: incomeData,
+        borderColor: '#10B981',
+        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#10B981',
+        pointBorderColor: '#0D0A08',
+        pointRadius: 4
+        },
+        {
+        label: 'Expenses',
+        data: expenseData,
+        borderColor: '#EF4444',
+        backgroundColor: 'rgba(239, 68, 68, 0.05)',
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#EF4444',
+        pointBorderColor: '#0D0A08',
+        pointRadius: 4
+        }
+        ]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+        legend: { labels: { color: '#D4C5BC' } },
+        tooltip: {
+        callbacks: {
+        label: (ctx) => `${ctx.dataset.label}: $${ctx.raw.toFixed(2)}`
+        }
+        }
+        },
+        scales: {
+        y: { ticks: { callback: v => '$' + v, color: '#D4C5BC' } },
+        x: { ticks: { color: '#D4C5BC' } }
+        }
+        }
+        });
+        
+        // Pie Chart (only if there are expenses)
+        if (categories.length > 0) {
+        const ctx2 = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+        labels: categories,
+        datasets: [{
+        data: categoryAmounts,
+        backgroundColor: ['#C68B5E', '#D9A577', '#F5E1C8', '#8B5A3C', '#6B3F34', '#A0714F'],
+        borderWidth: 0
+        }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+        legend: { position: 'bottom', labels: { color: '#D4C5BC' } }
+        }
+        }
+        });
+        } else {
+        // Show message if no expenses
+        document.getElementById('categoryChart').parentElement.innerHTML = '<p style="text-align:center; padding:2rem;">No expense data yet</p>';
+        }
+    </script>
+}

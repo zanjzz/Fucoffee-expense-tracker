@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Data/">
+    <File Path="AppDbContext.cs" />
+  </Folder>
+  <Folder Name="/Helpers/">
+    <File Path="SessionHelper.cs" />
+  </Folder>
+  <Project Path="FuCoffee.csproj" />
+</Solution>
