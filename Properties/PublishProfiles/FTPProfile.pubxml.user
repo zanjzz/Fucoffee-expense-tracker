@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAreL29G6QyEOrOBW399dC/gAAAAACAAAAAAAQZgAAAAEAACAAAACUZFFuFHP1F1ABJxE+QpGl9dklrbu1XXP6qdyw8NjDHwAAAAAOgAAAAAIAACAAAABuCyBl0r0HMs6qEG2MsKd5m9F9tM8O1qfARpeHmPPVuiAAAAAHFMJF4pAzUW+C1Wfwsleql0WCb1fGKBFvCKY0XOkdUkAAAAAA76dqiSavAzLaediMV+14diKaoL7pA0EdUG2DtHbdWaY7B3Di/oU5ikzQN+LP1lQ4h/6rdK//9vFW7ZfFHiy0</EncryptedPassword>
+    <History>False|2026-04-30T12:37:53.8382581Z||;</History>
+    <LastFailureDetails />
+    <_PublishTargetUrl>ftp://site66479.siteasp.net/wwwroot</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="appsettings.Development.json">
+      <publishTime>04/29/2026 16:40:50</publishTime>
+    </File>
+    <File Include="appsettings.json">
+      <publishTime>04/30/2026 20:22:39</publishTime>
+    </File>
+    <File Include="BCrypt.Net-Next.dll">
+      <publishTime>02/16/2026 19:44:28</publishTime>
+    </File>
+    <File Include="dotnet-tools.json">
+      <publishTime>04/30/2026 20:23:26</publishTime>
+    </File>
+    <File Include="FuCoffee.deps.json">
+      <publishTime>04/30/2026 20:33:12</publishTime>
+    </File>
+    <File Include="FuCoffee.dll">
+      <publishTime>04/30/2026 20:32:44</publishTime>
+    </File>
+    <File Include="FuCoffee.exe">
+      <publishTime>04/30/2026 20:32:44</publishTime>
+    </File>
+    <File Include="FuCoffee.pdb">
+      <publishTime>04/30/2026 20:32:44</publishTime>
+    </File>
+    <File Include="FuCoffee.runtimeconfig.json">
+      <publishTime>04/30/2026 18:32:27</publishTime>
+    </File>
+    <File Include="FuCoffee.staticwebassets.endpoints.json">
+      <publishTime>04/30/2026 18:32:33</publishTime>
+    </File>
+    <File Include="Microsoft.EntityFrameworkCore.Abstractions.dll">
+      <publishTime>11/01/2023 06:15:22</publishTime>
+    </File>
+    <File Include="Microsoft.EntityFrameworkCore.dll">
+      <publishTime>11/01/2023 06:15:58</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
