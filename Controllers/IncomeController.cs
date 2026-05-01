@@ -13,17 +13,25 @@ namespace Fucoffee.Controllers
             _context = context;
         }
 
-        // READ — list all income records
+        // READ — list income records (filtered by user)
         public IActionResult Index()
         {
             if (HttpContext.Session.GetString("Username") == null)
                 return RedirectToAction("Login", "Auth");
 
-            var incomes = _context.Incomes
-                .OrderByDescending(i => i.Date)
-                .ToList();
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var isAdmin = HttpContext.Session.GetString("Role") == "Admin";
 
-            return View(incomes);
+            var incomes = _context.Incomes.AsQueryable();
+
+            if (!isAdmin && userId.HasValue)
+            {
+                incomes = incomes.Where(i => i.RecordedBy == userId.Value);
+            }
+
+            incomes = incomes.OrderByDescending(i => i.Date);
+
+            return View(incomes.ToList());
         }
 
         // CREATE — show empty form
@@ -57,8 +65,15 @@ namespace Fucoffee.Controllers
             if (HttpContext.Session.GetString("Username") == null)
                 return RedirectToAction("Login", "Auth");
 
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var isAdmin = HttpContext.Session.GetString("Role") == "Admin";
+
             var income = _context.Incomes.Find(id);
             if (income == null) return NotFound();
+
+            // Check ownership
+            if (!isAdmin && income.RecordedBy != userId)
+                return Unauthorized();
 
             return View(income);
         }
@@ -72,7 +87,22 @@ namespace Fucoffee.Controllers
 
             if (!ModelState.IsValid) return View(model);
 
-            _context.Incomes.Update(model);
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var isAdmin = HttpContext.Session.GetString("Role") == "Admin";
+
+            var existingIncome = _context.Incomes.Find(model.IncomeId);
+            if (existingIncome == null) return NotFound();
+
+            // Check ownership
+            if (!isAdmin && existingIncome.RecordedBy != userId)
+                return Unauthorized();
+
+            existingIncome.Source = model.Source;
+            existingIncome.Amount = model.Amount;
+            existingIncome.Description = model.Description;
+            existingIncome.Date = model.Date;
+
+            _context.Incomes.Update(existingIncome);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
@@ -84,8 +114,15 @@ namespace Fucoffee.Controllers
             if (HttpContext.Session.GetString("Username") == null)
                 return RedirectToAction("Login", "Auth");
 
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var isAdmin = HttpContext.Session.GetString("Role") == "Admin";
+
             var income = _context.Incomes.Find(id);
             if (income == null) return NotFound();
+
+            // Check ownership
+            if (!isAdmin && income.RecordedBy != userId)
+                return Unauthorized();
 
             return View(income);
         }
@@ -97,8 +134,15 @@ namespace Fucoffee.Controllers
             if (HttpContext.Session.GetString("Username") == null)
                 return RedirectToAction("Login", "Auth");
 
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var isAdmin = HttpContext.Session.GetString("Role") == "Admin";
+
             var income = _context.Incomes.Find(id);
             if (income == null) return NotFound();
+
+            // Check ownership
+            if (!isAdmin && income.RecordedBy != userId)
+                return Unauthorized();
 
             _context.Incomes.Remove(income);
             _context.SaveChanges();
