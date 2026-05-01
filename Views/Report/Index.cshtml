@@ -7,6 +7,7 @@
 <div class="main-content">
     <h2><i class="fas fa-chart-bar"></i> Reports</h2>
 
+    <!-- Global Date Range Filter (unchanged) -->
     <form method="get" asp-action="Index">
         <div class="filter-group">
             <div class="filter-field">
@@ -18,12 +19,8 @@
                 <input type="date" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
             </div>
             <div class="filter-actions">
-                <button type="submit" class="btn-primary">
-                    <i class="fas fa-filter"></i> Filter
-                </button>
-                <a asp-action="Index" class="btn-secondary">
-                    <i class="fas fa-undo-alt"></i> Clear
-                </a>
+                <button type="submit" class="btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                <a asp-action="Index" class="btn-secondary"><i class="fas fa-undo-alt"></i> Clear</a>
             </div>
         </div>
     </form>
@@ -46,67 +43,85 @@
         </div>
     </div>
 
-    <!-- Income Table -->
+    <!-- INCOME TABLE with its own filter + scroll -->
     <div style="margin-bottom: 2rem;">
         <h3><i class="fas fa-coffee"></i> Income Records</h3>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Source</th>
-                        <th>Amount</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Incomes)
-                    {
+        <div class="filter-bar" style="margin-bottom: 0.75rem;">
+            <input type="text" id="searchReportIncome" class="search-input" placeholder="Search income..." />
+            <div class="filter-controls">
+                <input type="date" id="filterReportIncomeDate" />
+                <button id="clearReportIncomeFilter" class="filter-btn">Clear</button>
+            </div>
+        </div>
+        <div class="scrollable-table-wrapper">
+            <div class="table-responsive">
+                <table>
+                    <thead>
                         <tr>
-                            <td>@item.Source</td>
-                            <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
-                            <td class="description-cell">@item.Description</td>
-                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                            <th>Source</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
                         </tr>
-                    }
-                    @if (!Model.Incomes.Any())
-                    {
-                        <tr><td colspan="4" style="text-align: center;">No income records found</td></tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="reportIncomeBody">
+                        @foreach (var item in Model.Incomes)
+                        {
+                            <tr>
+                                <td>@item.Source</td>
+                                <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
+                                <td class="description-cell">@item.Description</td>
+                                <td class="date-cell" data-raw="@item.Date.ToString("yyyy-MM-dd")">@item.Date.ToString("MMM dd, yyyy")</td>
+                            </tr>
+                        }
+                        @if (!Model.Incomes.Any())
+                        {
+                            <tr><td colspan="4" style="text-align: center;">No income records found</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Expenses Table -->
+    <!-- EXPENSE TABLE with its own filter + scroll -->
     <div style="margin-bottom: 2rem;">
         <h3><i class="fas fa-receipt"></i> Expense Records</h3>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Amount</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Expenses)
-                    {
+        <div class="filter-bar" style="margin-bottom: 0.75rem;">
+            <input type="text" id="searchReportExpense" class="search-input" placeholder="Search expense..." />
+            <div class="filter-controls">
+                <input type="date" id="filterReportExpenseDate" />
+                <button id="clearReportExpenseFilter" class="filter-btn">Clear</button>
+            </div>
+        </div>
+        <div class="scrollable-table-wrapper">
+            <div class="table-responsive">
+                <table>
+                    <thead>
                         <tr>
-                            <td>@item.Category</td>
-                            <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
-                            <td class="description-cell">@item.Description</td>
-                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
                         </tr>
-                    }
-                    @if (!Model.Expenses.Any())
-                    {
-                        <tr><td colspan="4" style="text-align: center;">No expense records found</td></tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="reportExpenseBody">
+                        @foreach (var item in Model.Expenses)
+                        {
+                            <tr>
+                                <td>@item.Category</td>
+                                <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
+                                <td class="description-cell">@item.Description</td>
+                                <td class="date-cell" data-raw="@item.Date.ToString("yyyy-MM-dd")">@item.Date.ToString("MMM dd, yyyy")</td>
+                            </tr>
+                        }
+                        @if (!Model.Expenses.Any())
+                        {
+                            <tr><td colspan="4" style="text-align: center;">No expense records found</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -122,3 +137,63 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Income table filter (report)
+        const incSearch = document.getElementById('searchReportIncome');
+        const incDate = document.getElementById('filterReportIncomeDate');
+        const incClear = document.getElementById('clearReportIncomeFilter');
+        const incRows = document.querySelectorAll('#reportIncomeBody tr');
+
+        function filterReportIncome() {
+            let term = incSearch ? incSearch.value.toLowerCase() : '';
+            let date = incDate ? incDate.value : '';
+            incRows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                let dateCell = row.querySelector('.date-cell');
+                let rowDate = dateCell ? dateCell.getAttribute('data-raw') : '';
+                let matchesSearch = text.includes(term);
+                let matchesDate = (date === '' || rowDate === date);
+                row.style.display = (matchesSearch && matchesDate) ? '' : 'none';
+            });
+        }
+        if (incSearch) {
+            incSearch.addEventListener('keyup', filterReportIncome);
+            incDate.addEventListener('change', filterReportIncome);
+            incClear.addEventListener('click', () => {
+                incSearch.value = '';
+                incDate.value = '';
+                filterReportIncome();
+            });
+        }
+
+        // Expense table filter (report)
+        const expSearch = document.getElementById('searchReportExpense');
+        const expDate = document.getElementById('filterReportExpenseDate');
+        const expClear = document.getElementById('clearReportExpenseFilter');
+        const expRows = document.querySelectorAll('#reportExpenseBody tr');
+
+        function filterReportExpense() {
+            let term = expSearch ? expSearch.value.toLowerCase() : '';
+            let date = expDate ? expDate.value : '';
+            expRows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                let dateCell = row.querySelector('.date-cell');
+                let rowDate = dateCell ? dateCell.getAttribute('data-raw') : '';
+                let matchesSearch = text.includes(term);
+                let matchesDate = (date === '' || rowDate === date);
+                row.style.display = (matchesSearch && matchesDate) ? '' : 'none';
+            });
+        }
+        if (expSearch) {
+            expSearch.addEventListener('keyup', filterReportExpense);
+            expDate.addEventListener('change', filterReportExpense);
+            expClear.addEventListener('click', () => {
+                expSearch.value = '';
+                expDate.value = '';
+                filterReportExpense();
+            });
+        }
+    </script>
+}

@@ -1501,3 +1501,131 @@ a.btn-add:hover .fa-shopping-cart {
 .stat-card:hover i {
     transform: scale(1.2);
 }
+ 
+
+
+
+
+/* Scroll wrapper for tables (preserves your .table-responsive) */
+.scrollable-table-wrapper {
+    max-height: 460px; /* ~10 rows × 46px */
+    overflow-y: auto;
+    overflow-x: visible;
+    margin: 1rem 0;
+    border-radius: 16px;
+}
+
+    .scrollable-table-wrapper .table-responsive thead tr {
+        position: sticky;
+        top: 0;
+        background: rgba(15, 15, 15, 0.95);
+        backdrop-filter: blur(8px);
+        z-index: 10;
+    }
+
+    .scrollable-table-wrapper .table-responsive {
+        overflow-x: auto;
+        margin: 0;
+    }
+
+
+/* One‑row filter bar: search left, date + clear right */
+.filter-bar {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    /* Search input (left, grows) */
+    .filter-bar .search-input {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.7rem 1rem 0.7rem 2.5rem;
+        background: rgba(10, 10, 10, 0.7);
+        border: 1px solid var(--border-glass);
+        border-radius: 40px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        transition: var(--transition);
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%23a3a3a3" stroke-width="2"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>');
+        background-repeat: no-repeat;
+        background-position: 14px center;
+    }
+
+        .filter-bar .search-input:focus {
+            border-color: var(--caramel);
+            box-shadow: 0 0 0 2px rgba(198, 139, 94, 0.2);
+            outline: none;
+        }
+
+/* Right side group: date picker + clear button */
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+    /* Improved date picker – more visible */
+    .filter-controls input[type="date"] {
+        background: rgba(10, 10, 10, 0.7);
+        border: 1px solid var(--border-glass);
+        border-radius: 40px;
+        padding: 0.7rem 1rem;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        transition: var(--transition);
+        width: 160px; /* slightly wider */
+        cursor: pointer;
+    }
+
+        .filter-controls input[type="date"]:hover {
+            background: rgba(20, 20, 20, 0.8);
+            border-color: var(--border-glass-hover);
+        }
+
+        .filter-controls input[type="date"]:focus {
+            border-color: var(--caramel);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(198, 139, 94, 0.2);
+        }
+
+/* Clear button style */
+.filter-btn {
+    background: rgba(198, 139, 94, 0.15);
+    border: 1px solid var(--caramel);
+    color: var(--caramel-light);
+    padding: 0.6rem 1.2rem;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+    .filter-btn:hover {
+        background: rgba(198, 139, 94, 0.3);
+        transform: translateY(-1px);
+    }
+
+/* Responsive: stack on narrow screens */
+@media (max-width: 700px) {
+    .filter-bar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+        .filter-bar .search-input {
+            flex-basis: 100%;
+        }
+
+    .filter-controls {
+        flex-basis: 100%;
+        justify-content: flex-start;
+    }
+}

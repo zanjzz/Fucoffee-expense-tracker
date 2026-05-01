@@ -13,37 +13,53 @@
             </a>
         </div>
 
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Amount</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+        <!-- Filter bar: Search (left) | Date picker + Clear (right) -->
+        <div class="filter-bar">
+            <input type="text" id="searchExpenseInput" class="search-input" placeholder="Search by category, amount, description..." />
+            <div class="filter-controls">
+                <input type="date" id="filterDate" />
+                <button id="clearDateFilter" class="filter-btn">
+                    <i class="fas fa-undo-alt"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Scrollable Table Wrapper -->
+        <div class="scrollable-table-wrapper">
+            <div class="table-responsive">
+                <table>
+                    <thead>
                         <tr>
-                            <td>@item.Category</td>
-                            <td>@item.Amount.ToString("C")</td>
-                            <td class="description-cell">@item.Description</td>
-                            <td>@item.Date.ToString("MMM dd, yyyy")</td>
-                            <td class="table-actions">
-                                <a asp-action="Edit" asp-route-id="@item.ExpenseId" class="btn-edit btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.ExpenseId" class="btn-delete btn-sm">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </a>
-                            </td>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Actions</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="expenseTableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Category</td>
+                                <td class="negative">@item.Amount.ToString("C")</td>
+                                <td class="description-cell">@item.Description</td>
+                                <td class="date-cell" data-raw="@item.Date.ToString("yyyy-MM-dd")">
+                                    @item.Date.ToString("MMM dd, yyyy")
+                                </td>
+                                <td class="table-actions">
+                                    <a asp-action="Edit" asp-route-id="@item.ExpenseId" class="btn-edit btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.ExpenseId" class="btn-delete btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="quick-actions">
@@ -53,3 +69,34 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById('searchExpenseInput');
+        const datePicker = document.getElementById('filterDate');
+        const clearBtn = document.getElementById('clearDateFilter');
+        const tableRows = document.querySelectorAll('#expenseTableBody tr');
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedDate = datePicker.value;
+
+            tableRows.forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                const dateCell = row.querySelector('.date-cell');
+                const rowDate = dateCell ? dateCell.getAttribute('data-raw') : '';
+                const matchesSearch = rowText.includes(searchTerm);
+                const matchesDate = (selectedDate === '' || rowDate === selectedDate);
+                row.style.display = (matchesSearch && matchesDate) ? '' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('keyup', applyFilters);
+        datePicker.addEventListener('change', applyFilters);
+        clearBtn.addEventListener('click', () => {
+            datePicker.value = '';
+            searchInput.value = '';
+            applyFilters();
+        });
+    </script>
+}

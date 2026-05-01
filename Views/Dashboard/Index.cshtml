@@ -48,72 +48,93 @@
     </div>
 </div>
 
-<!-- Recent Tables Row -->
+<!-- Recent Tables Row with scroll + filters -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
-    <!-- Recent Income -->
+    
+    <!-- Recent Income (filtered + scrollable) -->
     <div>
         <h3><i class="fas fa-coffee"></i> Recent Income</h3>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr><th>Source</th><th>Amount</th><th>Date</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.RecentIncomes.Take(5))
-                    {
+        <div class="filter-bar" style="margin-bottom: 0.75rem;">
+            <input type="text" id="searchDashIncome" class="search-input" placeholder="Filter income..." style="flex:1; min-width:120px;" />
+            <div class="filter-controls">
+                <input type="date" id="filterDashIncomeDate" />
+                <button id="clearDashIncomeFilter" class="filter-btn" style="padding:0.4rem 0.8rem;">Clear</button>
+            </div>
+        </div>
+        <div class="scrollable-table-wrapper" style="max-height: 300px;">
+            <div class="table-responsive">
+                <table>
+                    <thead>
                         <tr>
-                            <td>@item.Source</td>
-                            <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
-                            <td>@item.Date.ToString("MMM dd")</td>
+                            <th>Source</th>
+                            <th>Amount</th>
+                            <th>Date</th>
                         </tr>
-                    }
-                    @if (!Model.RecentIncomes.Any())
-                    {
-                        <tr><td colspan="3">No income records yet</td></tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="dashIncomeBody">
+                        @foreach (var item in Model.RecentIncomes)
+                        {
+                            <tr>
+                                <td>@item.Source</td>
+                                <td style="color: var(--success);">+@item.Amount.ToString("C")</td>
+                                <td class="date-cell" data-raw="@item.Date.ToString("yyyy-MM-dd")">@item.Date.ToString("MMM dd")</td>
+                            </tr>
+                        }
+                        @if (!Model.RecentIncomes.Any())
+                        {
+                            <tr><td colspan="3">No income records yet</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Recent Expenses -->
+    <!-- Recent Expenses (filtered + scrollable) -->
     <div>
         <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr><th>Category</th><th>Amount</th><th>Date</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.RecentExpenses.Take(5))
-                    {
+        <div class="filter-bar" style="margin-bottom: 0.75rem;">
+            <input type="text" id="searchDashExpense" class="search-input" placeholder="Filter expense..." style="flex:1; min-width:120px;" />
+            <div class="filter-controls">
+                <input type="date" id="filterDashExpenseDate" />
+                <button id="clearDashExpenseFilter" class="filter-btn" style="padding:0.4rem 0.8rem;">Clear</button>
+            </div>
+        </div>
+        <div class="scrollable-table-wrapper" style="max-height: 300px;">
+            <div class="table-responsive">
+                <table>
+                    <thead>
                         <tr>
-                            <td>@item.Category</td>
-                            <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
-                            <td>@item.Date.ToString("MMM dd")</td>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Date</th>
                         </tr>
-                    }
-                    @if (!Model.RecentExpenses.Any())
-                    {
-                        <tr><td colspan="3">No expense records yet</td></tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="dashExpenseBody">
+                        @foreach (var item in Model.RecentExpenses)
+                        {
+                            <tr>
+                                <td>@item.Category</td>
+                                <td style="color: var(--danger);">-@item.Amount.ToString("C")</td>
+                                <td class="date-cell" data-raw="@item.Date.ToString("yyyy-MM-dd")">@item.Date.ToString("MMM dd")</td>
+                            </tr>
+                        }
+                        @if (!Model.RecentExpenses.Any())
+                        {
+                            <tr><td colspan="3">No expense records yet</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Quick Actions & Report Link -->
 <div class="quick-actions">
-    <a href="/Income/Create" class="btn-add">
-        <i class="fas fa-plus"></i> Add Income
-    </a>
-    <a href="/Expense/Create" class="btn-add">
-        <i class="fas fa-shopping-cart"></i> Add Expense
-    </a>
-    <a href="/Report/Index" class="btn-secondary">
-        <i class="fas fa-chart-bar"></i> Generate Report
-    </a>
+    <a href="/Income/Create" class="btn-add"><i class="fas fa-plus"></i> Add Income</a>
+    <a href="/Expense/Create" class="btn-add"><i class="fas fa-shopping-cart"></i> Add Expense</a>
+    <a href="/Report/Index" class="btn-secondary"><i class="fas fa-chart-bar"></i> Generate Report</a>
 </div>
 
 <a asp-controller="Report" asp-action="Index" class="report-link">
@@ -123,46 +144,21 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
-        // Get data from your model
+        // ----- Existing Charts Code (unchanged) -----
         const months = @Html.Raw(Json.Serialize(Model.Last6Months));
         const incomeData = @Html.Raw(Json.Serialize(Model.MonthlyIncome));
         const expenseData = @Html.Raw(Json.Serialize(Model.MonthlyExpenses));
-        
-        // Get category data (check if there are any expenses)
         const categories = @Html.Raw(Json.Serialize(Model.ExpensesByCategory.Keys));
         const categoryAmounts = @Html.Raw(Json.Serialize(Model.ExpensesByCategory.Values));
-        
-        // Line Chart
+
         const ctx1 = document.getElementById('trendChart').getContext('2d');
         new Chart(ctx1, {
         type: 'line',
         data: {
         labels: months,
         datasets: [
-        {
-        label: 'Income',
-        data: incomeData,
-        borderColor: '#10B981',
-        backgroundColor: 'rgba(16, 185, 129, 0.05)',
-        borderWidth: 2,
-        tension: 0.4,
-        fill: true,
-        pointBackgroundColor: '#10B981',
-        pointBorderColor: '#0D0A08',
-        pointRadius: 4
-        },
-        {
-        label: 'Expenses',
-        data: expenseData,
-        borderColor: '#EF4444',
-        backgroundColor: 'rgba(239, 68, 68, 0.05)',
-        borderWidth: 2,
-        tension: 0.4,
-        fill: true,
-        pointBackgroundColor: '#EF4444',
-        pointBorderColor: '#0D0A08',
-        pointRadius: 4
-        }
+        { label: 'Income', data: incomeData, borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.05)', borderWidth: 2, tension: 0.4, fill: true, pointBackgroundColor: '#10B981', pointBorderColor: '#0D0A08', pointRadius: 4 },
+        { label: 'Expenses', data: expenseData, borderColor: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.05)', borderWidth: 2, tension: 0.4, fill: true, pointBackgroundColor: '#EF4444', pointBorderColor: '#0D0A08', pointRadius: 4 }
         ]
         },
         options: {
@@ -170,11 +166,7 @@
         maintainAspectRatio: false,
         plugins: {
         legend: { labels: { color: '#D4C5BC' } },
-        tooltip: {
-        callbacks: {
-        label: (ctx) => `${ctx.dataset.label}: $${ctx.raw.toFixed(2)}`
-        }
-        }
+        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: $${ctx.raw.toFixed(2)}` } }
         },
         scales: {
         y: { ticks: { callback: v => '$' + v, color: '#D4C5BC' } },
@@ -182,31 +174,81 @@
         }
         }
         });
-        
-        // Pie Chart (only if there are expenses)
+
         if (categories.length > 0) {
         const ctx2 = document.getElementById('categoryChart').getContext('2d');
         new Chart(ctx2, {
         type: 'doughnut',
         data: {
         labels: categories,
-        datasets: [{
-        data: categoryAmounts,
-        backgroundColor: ['#C68B5E', '#D9A577', '#F5E1C8', '#8B5A3C', '#6B3F34', '#A0714F'],
-        borderWidth: 0
-        }]
+        datasets: [{ data: categoryAmounts, backgroundColor: ['#C68B5E', '#D9A577', '#F5E1C8', '#8B5A3C', '#6B3F34', '#A0714F'], borderWidth: 0 }]
         },
         options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-        legend: { position: 'bottom', labels: { color: '#D4C5BC' } }
-        }
+        plugins: { legend: { position: 'bottom', labels: { color: '#D4C5BC' } } }
         }
         });
         } else {
-        // Show message if no expenses
-        document.getElementById('categoryChart').parentElement.innerHTML = '<p style="text-align:center; padding:2rem;">No expense data yet</p>';
+        const catElem = document.getElementById('categoryChart');
+        if (catElem) catElem.parentElement.innerHTML = '<p style="text-align:center; padding:2rem;">No expense data yet</p>';
+        }
+
+        // ----- Dashboard Table Filters -----
+        // Income table filter
+        const dashIncomeSearch = document.getElementById('searchDashIncome');
+        const dashIncomeDate = document.getElementById('filterDashIncomeDate');
+        const dashIncomeClear = document.getElementById('clearDashIncomeFilter');
+        const dashIncomeRows = document.querySelectorAll('#dashIncomeBody tr');
+
+        function filterDashIncome() {
+        let term = dashIncomeSearch ? dashIncomeSearch.value.toLowerCase() : '';
+        let date = dashIncomeDate ? dashIncomeDate.value : '';
+        dashIncomeRows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        let dateCell = row.querySelector('.date-cell');
+        let rowDate = dateCell ? dateCell.getAttribute('data-raw') : '';
+        let matchesSearch = text.includes(term);
+        let matchesDate = (date === '' || rowDate === date);
+        row.style.display = (matchesSearch && matchesDate) ? '' : 'none';
+        });
+        }
+        if (dashIncomeSearch) {
+        dashIncomeSearch.addEventListener('keyup', filterDashIncome);
+        dashIncomeDate.addEventListener('change', filterDashIncome);
+        dashIncomeClear.addEventListener('click', () => {
+        dashIncomeSearch.value = '';
+        dashIncomeDate.value = '';
+        filterDashIncome();
+        });
+        }
+
+        // Expense table filter
+        const dashExpenseSearch = document.getElementById('searchDashExpense');
+        const dashExpenseDate = document.getElementById('filterDashExpenseDate');
+        const dashExpenseClear = document.getElementById('clearDashExpenseFilter');
+        const dashExpenseRows = document.querySelectorAll('#dashExpenseBody tr');
+
+        function filterDashExpense() {
+        let term = dashExpenseSearch ? dashExpenseSearch.value.toLowerCase() : '';
+        let date = dashExpenseDate ? dashExpenseDate.value : '';
+        dashExpenseRows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        let dateCell = row.querySelector('.date-cell');
+        let rowDate = dateCell ? dateCell.getAttribute('data-raw') : '';
+        let matchesSearch = text.includes(term);
+        let matchesDate = (date === '' || rowDate === date);
+        row.style.display = (matchesSearch && matchesDate) ? '' : 'none';
+        });
+        }
+        if (dashExpenseSearch) {
+        dashExpenseSearch.addEventListener('keyup', filterDashExpense);
+        dashExpenseDate.addEventListener('change', filterDashExpense);
+        dashExpenseClear.addEventListener('click', () => {
+        dashExpenseSearch.value = '';
+        dashExpenseDate.value = '';
+        filterDashExpense();
+        });
         }
     </script>
 }
